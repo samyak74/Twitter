@@ -1,5 +1,6 @@
 var mongoose=require('../db/mongoose');
 
+//Defining the user model
 var user=mongoose.model('User',{
     username:{
         type: String,

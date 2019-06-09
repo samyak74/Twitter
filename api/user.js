@@ -1,6 +1,6 @@
 var userModel = require('../models/user')
 
-//Defining middleware for user login and user registration
+//Defining middleware for user registration
 var user = {
     register : function(req, res, next){
         var username = req.body.username
@@ -24,7 +24,8 @@ var user = {
             return next(err)
         })
     },
-
+    
+    //Defining middleware for user login
     login : function(req, res, next){
         if(req.output){
             return next()
@@ -49,6 +50,7 @@ var user = {
     }
 }
 
+//Defining basic utlity functions for session management
 var session = {
     check : function(req, res, next){
         let sess = req.session

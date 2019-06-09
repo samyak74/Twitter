@@ -1,16 +1,9 @@
 module.exports = {
+    //Forwarding the response in json format
     jsonResponse: function(req, res, next) {
         res.json(req.output);
     },
-    sortData: function(req, res, next) {
-        var sortBy = req.query.order_by || "company_preference";
-        var sortType = req.query.sort_type || "asc";
-        res.output.output = req.output.output.sort(function(a, b) {
-            if (sortType === "desc") return b[sortBy] - a[sortBy];
-            else return a[sortBy] - b[sortBy];
-        });
-        return next();
-    },
+    //Basic validation of input whether the required keys are present
     validate : function(req, res, next){
         var obj = req.body
         if(Object.keys(obj).length === 0){

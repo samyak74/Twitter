@@ -16,7 +16,7 @@ var app = express()
 
 app.use(bodyParser.json());
 
-//Middleware for session
+//Middleware for session with redis store
 app.use(session({
     secret: 'mysecret',
     store: new redisStore({ host: 'localhost', port: 6379, client: client,ttl :  260}),
@@ -27,6 +27,8 @@ app.use(session({
 //Routes for logging in and user registration
 app.post('/register', common.validate, user.register, common.jsonResponse, errorHandler)
 app.get('/login', common.validate, sess.check, user.login, sess.set, common.jsonResponse, errorHandler)
+
+//Route for logging a user out and to destroy their created session
 app.get('/logout', sess.finish, common.jsonResponse, errorHandler)
 
 //Defining port for our server
