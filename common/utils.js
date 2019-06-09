@@ -10,5 +10,17 @@ module.exports = {
             else return a[sortBy] - b[sortBy];
         });
         return next();
+    },
+    validate : function(req, res, next){
+        var obj = req.body
+        if(Object.keys(obj).length === 0){
+            obj = req.query
+        }
+        Object.keys(obj).forEach(function(key){
+            if (obj[key] === null || obj[key] === ''){
+                return next(new Error("Invalid Input"))
+            }
+        })
+        return next()
     }
 };

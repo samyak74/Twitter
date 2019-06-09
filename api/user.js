@@ -1,9 +1,11 @@
 var userModel = require('../models/user')
 
+//Defining middleware for user login and user registration
 var user = {
     register : function(req, res, next){
         var username = req.body.username
         var password = req.body.password
+        //A check whether the username already exists
         userModel.find({},function(err,users){
             users.forEach(function(user){
                 if(user.username === username){
@@ -15,7 +17,6 @@ var user = {
             username,
             password
         })
-        
         newUser.save().then((doc)=>{
             req.output = doc
             return next()
@@ -25,6 +26,9 @@ var user = {
     },
 
     login : function(req, res, next){
+        if(req.output){
+            return next()
+        }
         var username = req.query.username
         var password = req.query.password
         userModel.find({
@@ -34,14 +38,44 @@ var user = {
             if(err){
                 return next(err)
             }
-            req.output = docs
+            req.output = `Welcome ${username}`
             req.output.message = "Login Successful"
             if(docs.length === 0){
                 req.output = "Username and Password do not match."
+                req.okay = 1
             }
             return next()
         })
     }
 }
 
-module.exports = user;
+var session = {
+    check : function(req, res, next){
+        let sess = req.session
+        if(sess.key){
+            req.output = `Welcome ${sess.key}`
+        }
+        return next()
+    },
+    set : function(req, res, next){
+        if(req.session.key || req.okay){
+            return next()
+        }
+        req.session.key=req.query.username
+        return next()
+    },
+    finish : function(req, res, next){
+        req.session.destroy(function(err){
+            if(err){
+                return next(err);
+            }
+            req.output = "Successfully logged out"
+            return next()
+        });
+    }
+}
+
+module.exports = {
+    user,
+    session
+}
