@@ -7,24 +7,28 @@ var user = {
         var password = req.body.password
         //A check whether the username already exists
         userModel.find({},function(err,users){
+            var check = 1
             users.forEach(function(user){
                 if(user.username === username){
+                    check = 0
                     return next(new Error("Username already exists"))
                 }
-            })  
-        })
-        var newUser = new userModel({
-            username,
-            password
-        })
-        newUser.save().then((doc)=>{
-            req.output = doc
-            return next()
-        }, (err)=>{
-            return next(err)
+            })
+            if(check === 1){
+                var newUser = new userModel({
+                    username,
+                    password
+                })
+                newUser.save().then((doc)=>{
+                    req.output = doc
+                    return next()
+                }, (err)=>{
+                    return next(err)
+                })
+            }              
         })
     },
-    
+
     //Defining middleware for user login
     login : function(req, res, next){
         if(req.output){
