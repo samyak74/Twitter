@@ -2,6 +2,7 @@
 var express = require('express')
 var redis   = require("redis");
 const bodyParser = require('body-parser')
+var cookieParser = require('cookie-parser')
 const session = require('express-session')
 var redisStore = require('connect-redis')(session);
 
@@ -15,6 +16,7 @@ var client  = redis.createClient();
 var app = express()
 
 app.use(bodyParser.json());
+app.use(cookieParser())
 
 //Middleware for session with redis store
 app.use(session({

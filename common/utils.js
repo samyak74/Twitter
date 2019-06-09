@@ -9,6 +9,7 @@ module.exports = {
         if(Object.keys(obj).length === 0){
             obj = req.query
         }
+        //Parsing through each property in the object
         Object.keys(obj).forEach(function(key){
             if (obj[key] === null || obj[key] === ''){
                 return next(new Error("Invalid Input"))

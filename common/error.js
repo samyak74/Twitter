@@ -12,8 +12,5 @@ module.exports = function(err, req, res, next) {
     if (err.data) {
         response.data = err.data;
     }
-    if (code >= 500) {
-        console.log(err.stack);
-    }
     res.status(code).json(response);
 };

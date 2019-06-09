@@ -56,6 +56,8 @@ var user = {
 
 //Defining basic utlity functions for session management
 var session = {
+    
+    // a check whether session already exists
     check : function(req, res, next){
         let sess = req.session
         if(sess.key){
@@ -63,6 +65,8 @@ var session = {
         }
         return next()
     },
+
+    //setting a new session
     set : function(req, res, next){
         if(req.session.key || req.okay){
             return next()
@@ -70,14 +74,23 @@ var session = {
         req.session.key=req.query.username
         return next()
     },
+
+    //terminating a session
     finish : function(req, res, next){
-        req.session.destroy(function(err){
-            if(err){
-                return next(err);
-            }
-            req.output = "Successfully logged out"
+        if(req.session.key){
+            req.session.destroy(function(err){
+                if(err){
+                    return next(err);
+                }
+                req.output = "Successfully logged out"
+                return next()
+            });
+        }
+        else{
+            req.output = "Login first"
             return next()
-        });
+        }
+        
     }
 }
 
